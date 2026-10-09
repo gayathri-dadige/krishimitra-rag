@@ -1,1 +1,11 @@
 SEPERATE-FEATURE-DEVELOPMENT.txt
+krishimitra-architecture.md
+.venv/
+.env
+backend/.env
+__pycache__/
+*.py[cod]
+.pytest_cache/
+frontend/node_modules/
+frontend/dist/
+frontend/*.tsbuildinfo

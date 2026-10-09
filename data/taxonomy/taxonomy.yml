@@ -1,0 +1,54 @@
+crops:
+  - code: paddy
+    name: Paddy
+    labels: {en: Paddy, te: వరి, hi: धान}
+    aliases: {en: [rice, paddy], te: [వరి, బియ్యం], hi: [धान, चावल]}
+    stages:
+      - {code: nursery, name: Nursery, labels: {en: Nursery, te: నారుమడి, hi: नर्सरी}, aliases: {en: [nursery], te: [నారుమడి], hi: [नर्सरी]}, ordinal: 1, day_from: 0, day_to: 20, reference_event: transplanting}
+      - {code: tillering, name: Tillering, labels: {en: Tillering, te: పిలకలు, hi: कल्ले}, aliases: {en: [tillering], te: [పిలకలు], hi: [कल्ले]}, ordinal: 2, day_from: 21, day_to: 45, reference_event: transplanting}
+      - {code: panicle_initiation, name: Panicle initiation, labels: {en: Panicle initiation, te: కంకి ఏర్పడటం, hi: बालियां बनना}, aliases: {en: [panicle initiation], te: [కంకి], hi: [बालियां]}, ordinal: 3, day_from: 46, day_to: 75, reference_event: transplanting}
+      - {code: grain_filling, name: Grain filling, labels: {en: Grain filling, te: గింజ నింపడం, hi: दाना भरना}, aliases: {en: [grain filling], te: [గింజ నింపడం], hi: [दाना भरना]}, ordinal: 4, day_from: 76, day_to: 110, reference_event: transplanting}
+  - code: cotton
+    name: Cotton
+    labels: {en: Cotton, te: పత్తి, hi: कपास}
+    aliases: {en: [cotton], te: [పత్తి], hi: [कपास]}
+    stages:
+      - {code: seedling, name: Seedling, labels: {en: Seedling, te: మొలక, hi: पौध}, aliases: {en: [seedling], te: [మొలక], hi: [पौध]}, ordinal: 1, day_from: 0, day_to: 30, reference_event: sowing}
+      - {code: squaring, name: Squaring, labels: {en: Squaring, te: చతురస్ర దశ, hi: स्क्वेयरिंग}, aliases: {en: [squaring], te: [చతురస్రం], hi: [स्क्वेयरिंग]}, ordinal: 2, day_from: 31, day_to: 60, reference_event: sowing}
+      - {code: flowering, name: Flowering, labels: {en: Flowering, te: పూత దశ, hi: फूल आना}, aliases: {en: [flowering], te: [పూత], hi: [फूल]}, ordinal: 3, day_from: 61, day_to: 110, reference_event: sowing}
+      - {code: boll_development, name: Boll development, labels: {en: Boll development, te: కాయ అభివృద్ధి, hi: टिंडा विकास}, aliases: {en: [boll development], te: [కాయ అభివృద్ధి], hi: [टिंडा विकास]}, ordinal: 4, day_from: 111, day_to: 170, reference_event: sowing}
+  - code: maize
+    name: Maize
+    labels: {en: Maize, te: మొక్కజొన్న, hi: मक्का}
+    aliases: {en: [maize, corn], te: [మొక్కజొన్న], hi: [मक्का]}
+    stages:
+      - {code: emergence, name: Emergence, labels: {en: Emergence, te: మొలకెత్తడం, hi: अंकुरण}, aliases: {en: [emergence], te: [మొలకెత్తడం], hi: [अंकुरण]}, ordinal: 1, day_from: 0, day_to: 15, reference_event: sowing}
+      - {code: vegetative, name: Vegetative growth, labels: {en: Vegetative growth, te: పెరుగుదల, hi: वानस्पतिक वृद्धि}, aliases: {en: [vegetative], te: [పెరుగుదల], hi: [वानस्पतिक]}, ordinal: 2, day_from: 16, day_to: 45, reference_event: sowing}
+      - {code: tasseling, name: Tasseling, labels: {en: Tasseling, te: పూతకు ముందు, hi: नर मंजरी}, aliases: {en: [tasseling], te: [పూతకు ముందు], hi: [नर मंजरी]}, ordinal: 3, day_from: 46, day_to: 70, reference_event: sowing}
+      - {code: grain_filling, name: Grain filling, labels: {en: Grain filling, te: గింజ నింపడం, hi: दाना भरना}, aliases: {en: [grain filling], te: [గింజ నింపడం], hi: [दाना भरना]}, ordinal: 4, day_from: 71, day_to: 120, reference_event: sowing}
+
+seasons:
+  - {code: kharif, name: Kharif, labels: {en: Kharif, te: ఖరీఫ్, hi: खरीफ}, aliases: {en: [kharif, monsoon], te: [ఖరీఫ్], hi: [खरीफ]}}
+  - {code: rabi, name: Rabi, labels: {en: Rabi, te: రబీ, hi: रबी}, aliases: {en: [rabi, winter], te: [రబీ], hi: [रबी]}}
+  - {code: summer, name: Summer, labels: {en: Summer, te: వేసవి, hi: ग्रीष्म}, aliases: {en: [summer], te: [వేసవి], hi: [ग्रीष्म]}}
+
+regions:
+  - {code: telangana, name: Telangana, level: state, parent: null, labels: {en: Telangana, te: తెలంగాణ, hi: तेलंगाना}, aliases: {en: [telangana], te: [తెలంగాణ], hi: [तेलंगाना]}}
+  - {code: northern, name: Northern Telangana Zone, level: zone, parent: telangana, labels: {en: Northern Telangana Zone, te: ఉత్తర తెలంగాణ మండలం, hi: उत्तरी तेलंगाना क्षेत्र}, aliases: {en: [northern telangana], te: [ఉత్తర తెలంగాణ], hi: [उत्तरी तेलंगाना]}}
+  - {code: central, name: Central Telangana Zone, level: zone, parent: telangana, labels: {en: Central Telangana Zone, te: మధ్య తెలంగాణ మండలం, hi: मध्य तेलंगाना क्षेत्र}, aliases: {en: [central telangana], te: [మధ్య తెలంగాణ], hi: [मध्य तेलंगाना]}}
+  - {code: southern, name: Southern Telangana Zone, level: zone, parent: telangana, labels: {en: Southern Telangana Zone, te: దక్షిణ తెలంగాణ మండలం, hi: दक्षिणी तेलंगाना क्षेत्र}, aliases: {en: [southern telangana], te: [దక్షిణ తెలంగాణ], hi: [दक्षिणी तेलंगाना]}}
+  - {code: adilabad, name: Adilabad, level: district, parent: northern, labels: {en: Adilabad, te: ఆదిలాబాద్, hi: आदिलाबाद}, aliases: {en: [adilabad], te: [ఆదిలాబాద్], hi: [आदिलाबाद]}}
+  - {code: nirmal, name: Nirmal, level: district, parent: northern, labels: {en: Nirmal, te: నిర్మల్, hi: निर्मल}, aliases: {en: [nirmal], te: [నిర్మల్], hi: [निर्मल]}}
+  - {code: nizamabad, name: Nizamabad, level: district, parent: northern, labels: {en: Nizamabad, te: నిజామాబాద్, hi: निजामाबाद}, aliases: {en: [nizamabad], te: [నిజామాబాద్], hi: [निजामाबाद]}}
+  - {code: karimnagar, name: Karimnagar, level: district, parent: central, labels: {en: Karimnagar, te: కరీంనగర్, hi: करीमनगर}, aliases: {en: [karimnagar], te: [కరీంనగర్], hi: [करीमनगर]}}
+  - {code: warangal, name: Warangal, level: district, parent: central, labels: {en: Warangal, te: వరంగల్, hi: वारंगल}, aliases: {en: [warangal], te: [వరంగల్], hi: [वारंगल]}}
+  - {code: siddipet, name: Siddipet, level: district, parent: central, labels: {en: Siddipet, te: సిద్దిపేట, hi: सिद्धिपेट}, aliases: {en: [siddipet], te: [సిద్దిపేట], hi: [सिद्धिपेट]}}
+  - {code: nalgonda, name: Nalgonda, level: district, parent: southern, labels: {en: Nalgonda, te: నల్గొండ, hi: नलगोंडा}, aliases: {en: [nalgonda], te: [నల్గొండ, నల్లగొండ], hi: [नलगोंडा]}}
+  - {code: hyderabad, name: Hyderabad, level: district, parent: southern, labels: {en: Hyderabad, te: హైదరాబాద్, hi: हैदराबाद}, aliases: {en: [hyderabad], te: [హైదరాబాద్], hi: [हैदराबाद]}}
+  - {code: rangareddy, name: Rangareddy, level: district, parent: southern, labels: {en: Rangareddy, te: రంగారెడ్డి, hi: रंगारेड्डी}, aliases: {en: [rangareddy, ranga reddy], te: [రంగారెడ్డి], hi: [रंगारेड्डी]}}
+
+topics:
+  - {code: fertilizer_schedule, name: Fertilizer schedule, labels: {en: Fertilizer schedule, te: ఎరువుల షెడ్యూల్, hi: उर्वरक अनुसूची}, aliases: {en: [fertilizer, fertilizer schedule], te: [ఎరువులు], hi: [उर्वरक]}, required_slots: [season, growth_stage]}
+  - {code: pest_management, name: Pest management, labels: {en: Pest management, te: పురుగు నిర్వహణ, hi: कीट प्रबंधन}, aliases: {en: [pest management, pests], te: [పురుగు], hi: [कीट]}, required_slots: [growth_stage]}
+  - {code: irrigation, name: Irrigation, labels: {en: Irrigation, te: నీటిపారుదల, hi: सिंचाई}, aliases: {en: [irrigation, watering], te: [నీటిపారుదల], hi: [सिंचाई]}, required_slots: [season, growth_stage]}
+  - {code: variety_selection, name: Variety selection, labels: {en: Variety selection, te: రకం ఎంపిక, hi: किस्म चयन}, aliases: {en: [variety, variety selection], te: [రకం], hi: [किस्म]}, required_slots: []}

@@ -1,0 +1,33 @@
+services:
+  db:
+    image: pgvector/pgvector:pg16
+    environment:
+      POSTGRES_DB: krishimitra
+      POSTGRES_USER: krishimitra
+      POSTGRES_PASSWORD: krishimitra
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U krishimitra -d krishimitra"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      DATABASE_URL: postgresql+psycopg://krishimitra:krishimitra@db:5432/krishimitra
+      TAXONOMY_PATH: /data/taxonomy/taxonomy.yml
+    depends_on:
+      db:
+        condition: service_healthy
+    ports:
+      - "8000:8000"
+    command: ["sh", "-c", "alembic upgrade head && python -m app.db.seed && uvicorn app.api.main:app --host 0.0.0.0 --port 8000"]
+
+volumes:
+  postgres_data:
