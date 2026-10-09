@@ -46,3 +46,9 @@ DATABASE_URL=postgresql+psycopg://USERNAME:PASSWORD@localhost:5432/DATABASE_NAME
 ```
 
 Do not commit `backend/.env`; it is ignored by Git.
+
+Context extraction is deterministic by default. For Slice 4 provider testing,
+set `LLM_PROVIDER=fake` and provide `LLM_FAKE_RESPONSE` as a JSON object. To use
+the optional live Anthropic extractor, set `LLM_PROVIDER=anthropic`,
+`LLM_MODEL`, and `ANTHROPIC_API_KEY`. Live failures return HTTP 503 without
+producing a partial advisory.

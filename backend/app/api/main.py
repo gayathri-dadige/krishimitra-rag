@@ -14,11 +14,12 @@ from app.chat.service import answer_question
 from app.core.config import get_settings
 from app.db.models import Chunk
 from app.db.session import get_db
+from app.llm.client import LLMResponseError, LLMUnavailableError
 from app.taxonomy.service import taxonomy_payload
 
 settings = get_settings()
 app = FastAPI(title=settings.app_name, version="0.1.0")
-CURRENT_MIGRATION = "0004_sessions"
+CURRENT_MIGRATION = "0005_slice4_session_version"
 
 
 class ChatRequest(BaseModel):
@@ -103,7 +104,15 @@ def get_taxonomy(
 @app.post("/chat", tags=["chat"])
 @app.post("/api/v1/chat", include_in_schema=False, tags=["chat"])
 def chat(request: ChatRequest, db: Session = Depends(get_db)) -> dict[str, object]:  # noqa: B008
-    return answer_question(db, request.message, request.as_of_date, request.session_id)
+    try:
+        return answer_question(db, request.message, request.as_of_date, request.session_id)
+    except (LLMResponseError, LLMUnavailableError) as exc:
+        raise HTTPException(
+            status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+            detail="The context extraction service is temporarily unavailable",
+        ) from exc
+    except ValueError as exc:
+        raise HTTPException(status_code=status.HTTP_422_UNPROCESSABLE_ENTITY, detail=str(exc)) from exc
 
 
 @app.get("/chunks/{chunk_id}", tags=["ingestion"])

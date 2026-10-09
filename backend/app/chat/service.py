@@ -1,13 +1,14 @@
 from __future__ import annotations
 
 import re
-from datetime import UTC, date, datetime
+from datetime import UTC, date, datetime, timedelta
 from typing import Any
 from uuid import UUID, uuid4
 
 from sqlalchemy import select
 from sqlalchemy.orm import Session, joinedload
 
+from app.core.config import get_settings
 from app.db.models import (
     ChatMessage,
     ChatSession,
@@ -19,6 +20,7 @@ from app.db.models import (
     Supersession,
     Topic,
 )
+from app.llm.client import get_llm_client
 
 _CONTEXT_KEYS = ("crop", "region", "season", "stage", "topic")
 _SLOT_ALIASES = {"growth_stage": "stage", "days_after_event": "stage"}
@@ -148,6 +150,13 @@ def _new_session(db: Session, session_id: str) -> ChatSession:
     return session
 
 
+def _is_expired(session: ChatSession, now: datetime) -> bool:
+    updated_at = session.updated_at
+    if updated_at.tzinfo is None:
+        updated_at = updated_at.replace(tzinfo=UTC)
+    return updated_at < now - timedelta(days=get_settings().retention_days)
+
+
 def _get_session(db: Session, session_id: str | None) -> ChatSession:
     if session_id is None:
         return _new_session(db, str(uuid4()))
@@ -156,7 +165,27 @@ def _get_session(db: Session, session_id: str | None) -> ChatSession:
     except ValueError as exc:
         raise ValueError("session_id must be a UUID") from exc
     session = db.get(ChatSession, session_id)
+    if session is not None and _is_expired(session, datetime.now(UTC)):
+        db.delete(session)
+        db.commit()
+        return _new_session(db, session_id)
     return session or _new_session(db, session_id)
+
+
+def purge_expired_sessions(db: Session, now: datetime | None = None) -> int:
+    cutoff = (now or datetime.now(UTC)) - timedelta(days=get_settings().retention_days)
+    sessions = db.scalars(select(ChatSession)).all()
+    expired = []
+    for session in sessions:
+        updated_at = session.updated_at
+        if updated_at.tzinfo is None:
+            updated_at = updated_at.replace(tzinfo=UTC)
+        if updated_at < cutoff:
+            expired.append(session)
+    for session in expired:
+        db.delete(session)
+    db.commit()
+    return len(expired)
 
 
 def _tag_matches(ids: list[int] | None, value_id: int | None) -> bool:
@@ -271,7 +300,26 @@ def answer_question(
 ) -> dict[str, object]:
     session = _get_session(db, session_id)
     incoming = _extract_natural_context(db, message, session.context or {})
+    missing_before_llm = {"crop", "region", "season", "stage", "topic"} - incoming.keys()
+    if missing_before_llm:
+        llm = get_llm_client(get_settings())
+        if llm is not None:
+            incoming = {**incoming, **llm.extract_context(message)}
     merged = {**(session.context or {}), **incoming}
+    crop, region, season, stage, topic = _resolve_context(db, merged)
+    previous_context = session.context or {}
+    for key, resolved in (
+        ("crop", crop),
+        ("region", region),
+        ("season", season),
+        ("stage", stage),
+        ("topic", topic),
+    ):
+        if key in merged and resolved is None:
+            if key in previous_context:
+                merged[key] = previous_context[key]
+            else:
+                merged.pop(key)
     crop, region, season, stage, topic = _resolve_context(db, merged)
     if crop:
         merged["crop"] = crop.code
@@ -291,6 +339,7 @@ def answer_question(
     ]
     db.add(ChatMessage(session_id=session.id, role="user", content=message))
     session.context = merged
+    session.context_version += 1
     session.clarification_rounds += 1 if missing else 0
     if missing and session.clarification_rounds > 3:
         response: dict[str, object] = {

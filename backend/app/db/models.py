@@ -96,6 +96,7 @@ class ChatSession(Base):
     id: Mapped[str] = mapped_column(String(36), primary_key=True)
     context: Mapped[dict[str, Any]] = mapped_column(JSON, nullable=False, default=dict)
     clarification_rounds: Mapped[int] = mapped_column(Integer, nullable=False, default=0)
+    context_version: Mapped[int] = mapped_column(Integer, nullable=False, default=0)
     last_topic_code: Mapped[str | None] = mapped_column(String(80), nullable=True)
     created_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True), nullable=False, server_default=func.now()
